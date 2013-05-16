@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+require 'rqrcode'
+
+hash = ARGV[0] || `phantomjs hash.js`.strip
+text = 'kuauthen://h/' + hash
+
+puts "\n\n=== Got authen URL: " + text + " ===\n\n"
+
+qr = RQRCode::QRCode.new(text, :size => 3, :level => :l)
+qrs = qr.to_s
+border = ' ' * (qrs.lines[0].length + 1) + "\n"
+qrs = border + qrs.lines.map { |x| ' ' + x.gsub(/\r?\n/, '') + " \n" }.join('') + border
+puts qrs.chars.map { |x| x == ' ' ? "\e[7m  \e[0m" : x == 'x' ? '  ' : x }.join('')
+
